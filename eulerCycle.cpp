@@ -42,7 +42,7 @@ int main() {
 		return 0;
 	}
 	cout<<"YES\n";
-	//generate eulerian cycle
+	//generate eulerian cycle using Hierholzer's Algorithm in O(E) time
 	for(u=1;u<=n;u++) {
 		while(!edges[u].empty()) {
 			ll s = u;
