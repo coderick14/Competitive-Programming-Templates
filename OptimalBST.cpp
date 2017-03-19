@@ -4,6 +4,11 @@ using namespace std;
 
 int cost[N][N], obst[N][N], prefix[N];
 
+/*
+ * function to find optimal binary search tree (with minimum cost)
+ * time complexity : O(n^3)
+ * space complexity : O(n^2)
+ */
 void findOptimalBST(int keys[], int freq[], int n) {
     int i,j,l,r;
     /*precompute prefix sums*/
@@ -21,7 +26,7 @@ void findOptimalBST(int keys[], int freq[], int n) {
         obst[i][i] = i;   
     }
     for(l=2; l<=n; l++) {
-        for(i=0; i<=n-l+1; i++) {
+        for(i=0; i<n-l+1; i++) {
             j = i+l-1;
             cost[i][j] = INT_MAX;
             /*Calculate cost for each element in [i,j] as the root and take the minimum*/
@@ -35,6 +40,11 @@ void findOptimalBST(int keys[], int freq[], int n) {
                 }
             }
         }
+    }
+    for(i=0;i<n;i++) {
+        for(j=0;j<n;j++)
+            cout<<cost[i][j]<<" ";
+        cout<<endl;
     }
 }
 
