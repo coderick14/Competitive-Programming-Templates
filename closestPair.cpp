@@ -59,8 +59,9 @@ double closestPair(vector<point> &pointsByX, vector<point> &pointsByY, ll low, l
 	double bestDistance = min(distLeft, distRight);
 
 	vector<point> pointsInStrip;
-	for(i=0; i<n && abs(pointsByY[i].x - pointsByX[mid].x) < bestDistance; i++) {
-		pointsInStrip.push_back(pointsByY[i]);
+	for(i=0; i<n; i++) {
+        if(abs(pointsByY[i].x - pointsByX[mid].x) < bestDistance)
+		    pointsInStrip.push_back(pointsByY[i]);
 	}
 
 	for(i=0; i<pointsInStrip.size(); i++) {
@@ -68,6 +69,7 @@ double closestPair(vector<point> &pointsByX, vector<point> &pointsByY, ll low, l
 			double dist = euclideanDistance(pointsInStrip[i], pointsInStrip[j]);
 			if(dist < bestDistance) {
 				bestDistance = dist;
+                minDist = dist;
 				result1 = pointsInStrip[i];
 				result2 = pointsInStrip[j];
 			}
