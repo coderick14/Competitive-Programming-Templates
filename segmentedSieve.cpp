@@ -1,5 +1,6 @@
 //Program to generate all primes in the range[m,n]
 //seg_sieve[i] indicates whether i+m is prime or not
+// seg_sieve[i] = false ==> (i+m) is a prime
 #include <bits/stdc++.h>
 #define ll long long
 using namespace std;
