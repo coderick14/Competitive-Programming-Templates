@@ -59,9 +59,9 @@ struct node {
 
 vector<node> tree;
 vi depth(100005), parent(100005), section_ancestor(100005);
-ll maxdepth = 0;
-// DFS to calculate depths of each node in O(n)
-void dfs(ll u) {
+ll sqrtH = 0, maxdepth = 0;
+
+void find_maxdepth(ll u) {
     ll i, len = tree[u].adj.size();
     FOR(i,0,len) {
         ll v = tree[u].adj[i];
@@ -69,27 +69,31 @@ void dfs(ll u) {
         if (depth[v] > maxdepth) {
             maxdepth = depth[v];
         }
-        dfs(v);
+        find_maxdepth(v);
     }
 }
 
-// LCA preprocessing in O(n)
+// LCA preprocessing with DFS in O(n)
 // Divide the tree in sqrt(H) sections where H = height of the tree
 // section_ancestor[i] stores the ancestor of node i in the last level of upper section
-void LCA_preprocessing(ll n) {
-    ll i, sqrtH = int(sqrt(maxdepth));
-
-    FOR(i,1,n+1) {
-        if (i < sqrtH) {
-            section_ancestor[i] = 1;
-        }
-        else if (depth[i] % sqrtH == 0) {
-            section_ancestor[i] = parent[i];
-        }
-        else {
-            section_ancestor[i] = section_ancestor[parent[i]];
-        }
+void dfs(ll u) {
+    ll i, v;
+    if (depth[u] < sqrtH) {
+        section_ancestor[u] = 1;
     }
+    else if (depth[u] % sqrtH == 0) {
+        section_ancestor[u] = parent[u];
+    }
+    else {
+        section_ancestor[u] = section_ancestor[parent[u]];
+    }
+
+    ll len = tree[u].adj.size();
+    FOR(i,0,len) {
+        v = tree[u].adj[i];
+        dfs(v);
+    }
+
 }
 
 // Returns LCA of x and y in O(sqrt(n))
@@ -127,15 +131,14 @@ int main(int argc, char *argv[]) {
         tree[j].adj.pb(i);
         parent[i] = j;
     }
+    find_maxdepth(1);
+    sqrtH = int(sqrt(maxdepth));
     dfs(1);
-    // cout << "DFS complete ----> maxdepth = " << maxdepth << endl;
-    LCA_preprocessing(n);
-    // cout << "LCA preprocessing done" << endl;
-    // FOR(i,1,n+1) {
-    //     cout << "section_ancestor[" << i <<"] = " << section_ancestor[i] << endl;
-    // }
+    FOR(i,1,n+1) {
+        cout << "section_ancestor[" << i <<"] = " << section_ancestor[i] << endl;
+    }
     x = read_ll();
     y = read_ll();
-    // cout << "LCA of " << x << " and " << y << " = " << getLCA(x,y) << endl;
+    cout << "LCA of " << x << " and " << y << " = " << getLCA(x,y) << endl;
 	return 0;
 }
