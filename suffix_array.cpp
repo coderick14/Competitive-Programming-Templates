@@ -8,6 +8,11 @@ struct ranking {
     ll second;
 };
 
+// P[i][j] holds the ranking of the j-th suffix
+// after comparing the first 2^i characters
+// of that suffix
+ll P[20][1000000];
+
 bool comp(ranking a, ranking b) {
     if (a.first == b.first) {
         return a.second < b.second;
@@ -21,11 +26,6 @@ vector<ll> build_suffix_array(string s) {
 
     // vector to hold final suffix array result
     vector<ll> sa(n);
-
-    // P[i][j] holds the ranking of the j-th suffix
-    // after comparing the first 2^i characters
-    // of that suffix
-    ll P[lgn][n];
 
     // vector to store ranking tuples of suffixes
     vector<ranking> ranks(n);
@@ -58,12 +58,34 @@ vector<ll> build_suffix_array(string s) {
     return sa;
 }
 
+vector<ll> build_lcp(vector<ll> &sa, ll n) {
+    
+    vector<ll> lcp(n,0);
+    ll k, i, j , x, delta, step = ceil(log2(n));
+    for (k = 1; k < n; k++) {
+        i = k;
+        j = k - 1;
+        for (x = step; x >= 0; x--) {
+            if (P[x][sa[i]] == P[x][sa[j]]) {
+                delta = pow(2,x);
+                lcp[i] += delta;
+                i += delta;
+                j += delta;
+            }
+        }    
+    }
+    return lcp;
+}
+
 int main() {
     string s;
+    ll i, n, m, ans;
     cin >> s;
+    n = s.length();
     vector<ll> sa = build_suffix_array(s);
-    for(ll i = 0; i < s.length(); i++) {
-        cout << i << " : " << sa[i] << endl;
+    vector<ll> lcp = build_lcp(sa,n);
+    for(ll i = 0; i < n; i++) {
+        cout << i << " : " << sa[i] << " : " << s.substr(sa[i]) << " : " << lcp[i] << endl;
     }
     return 0;
 }
