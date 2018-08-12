@@ -62,7 +62,7 @@ int main() {
 			}
 			bigb = max(bigb, points[lg].x - lastb);
 			bigr = max(bigr, points[lg].x - lastr);
-			DEBUG(bigb); DEBUG(bigr);
+			// DEBUG(bigb); DEBUG(bigr);
 			ans += min(2*(points[lg].x-points[fg].x), 3*(points[lg].x-points[fg].x) - bigb - bigr);
 		}
 	}
@@ -98,13 +98,13 @@ int main() {
 				if (lastb != -1) {
 					ans += (points[i].x - lastb);
 				}
-				lastb = i;
+				lastb = points[i].x;
 			}
 			if (points[i].color == 'R') {
 				if (lastr != -1) {
 					ans += (points[i].x - lastr);
 				}
-				lastr = i;
+				lastr = points[i].x;
 			}
 		}
 	}
