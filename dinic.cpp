@@ -19,7 +19,7 @@ void add_edge(ll u, ll v, ll c) {
 	}
 }
 
-bool bfs(ll lim) {
+bool bfs() {
 	fill(dist.begin(), dist.end(),INF);
 	dist[src] = 0;
 	q.push(src);
@@ -28,7 +28,7 @@ bool bfs(ll lim) {
 		ll u = q.front(); q.pop();
 
 		for (ll to : adj[u]) {
-			if (dist[to] == INF and capacity[u][to] - flow[u][to] >= lim) {
+			if (dist[to] == INF and flow[u][to] < capacity[u][to]) {
 				dist[to] = dist[u] + 1;
 				q.push(to);
 			}
@@ -39,7 +39,7 @@ bool bfs(ll lim) {
 	return dist[dest] != INF;
 }
 
-bool dfs(ll u, ll curr_flow) {
+ll dfs(ll u, ll curr_flow) {
 	if (curr_flow == 0 or u == dest) {
 		return curr_flow;
 	}
@@ -47,30 +47,26 @@ bool dfs(ll u, ll curr_flow) {
 	for (; pt[u] < adj[u].size(); pt[u]++) {
 		ll to = adj[u][pt[u]];
 
-		if (dist[to] == dist[u] + 1 and capacity[u][to] - flow[u][to] >= curr_flow) {
-			bool pushed = dfs(to, curr_flow);
-			if (pushed) {
-				flow[u][to] += curr_flow;
-				flow[to][u] -= curr_flow;
-				return true; 
+		if (dist[to] == dist[u] + 1) {
+			ll pushed = dfs(to, min(curr_flow, capacity[u][to] - flow[u][to]));
+			if (pushed > 0) {
+				flow[u][to] += pushed;
+				flow[to][u] -= pushed;
+				return pushed; 
 			}
 		}
 	}
 
-	return false;
+	return 0;
 }
 
 ll dinic() {
-	ll flow = 0, lim = (1 << 30);
-	while (lim >= 1) {
-		if (!bfs(lim)) {
-			lim >>= 1;
-			continue;
-		}
+	ll flow = 0;
+	while (bfs()) {
 		fill(pt.begin(), pt.end(),0);
 
-		 while (dfs(src, lim)) {
-		 	flow += lim;
+		 while (ll pushed = dfs(src, INF)) {
+		 	flow += pushed;
 		 }
 	}
 	return flow;
