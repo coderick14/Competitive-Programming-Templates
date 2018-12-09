@@ -79,7 +79,7 @@ void LCA_preprocessing(ll n) {
 	ll i, j;
 
 	for(i = 1; i <= n; i++) {
-		for(j = 0; 1 << j <= n; j++) {
+		for(j = 0; (1 << j) <= n; j++) {
 			binary_ancestor[i][j] = -1;
 		}
 	}
@@ -88,7 +88,7 @@ void LCA_preprocessing(ll n) {
 		binary_ancestor[i][0] = parent[i];
 	}
 
-	for(j = 1; 1 << j <=n; j++) {
+	for(j = 1; (1 << j) <=n; j++) {
 		for(i = 1; i <= n; i++) {
 			binary_ancestor[i][j] = binary_ancestor[binary_ancestor[i][j-1]][j-1];
 		}
